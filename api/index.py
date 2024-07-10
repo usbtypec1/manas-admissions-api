@@ -4,8 +4,11 @@ from datetime import datetime
 import httpx
 from bs4 import BeautifulSoup
 from flask import Flask
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 
 @dataclass(frozen=True, slots=True)
@@ -105,6 +108,7 @@ def get_department_ratings(
 
 
 @app.route('/departments/<int:department_id>')
+@cross_origin()
 def home(department_id: int):
     with httpx.Client() as http_client:
         department = get_department_ratings(http_client, department_id)
